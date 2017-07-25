@@ -289,48 +289,6 @@ void RTGraphics::fillMesh(std::vector<tinyobj::shape_t>* _shapes, std::vector<ti
 
 }
 
-/*
-void depthFillKDBuffers(Node* _node, std::vector<NodePass2> *_initdata, std::vector<int> *_indiceList, int _index)
-{
-
-	if (_node->left == NULL && _node->right == NULL)
-	{
-		_initdata->at(_index).left_right_nodeID[0] = -1;
-		_initdata->at(_index).left_right_nodeID[1] = -1;
-		_initdata->at(_index).index = _indiceList->size();
-		_initdata->at(_index).nrOfTriangles = _node->index->size();
-
-		for (int i = 0; i < _node->index->size(); i++)
-		{
-			_indiceList->push_back(_node->index->at(i));
-		}
-
-	}
-	else
-	{
-		NodePass2 nodeRight;
-		NodePass2 nodeLeft;
-
-		nodeLeft.aabb = _node->left->aabb;
-		nodeLeft.index = -1;
-		nodeLeft.nrOfTriangles = 0;
-		nodeRight.aabb = _node->right->aabb;
-		nodeRight.index = -1;
-		nodeRight.nrOfTriangles = 0;
-
-		_initdata->push_back(nodeLeft);
-		_initdata->at(_index).left_right_nodeID[0] = _initdata->size() - 1;
-
-		_initdata->push_back(nodeRight);
-		_initdata->at(_index).left_right_nodeID[1] = _initdata->size() - 1;
-
-		depthFillKDBuffers(_node->left, _initdata, _indiceList, _initdata->at(_index).left_right_nodeID[0]);
-		depthFillKDBuffers(_node->right, _initdata, _indiceList, _initdata->at(_index).left_right_nodeID[1]);
-	}
-
-}
-*/
-
 void breadthFillKDBuffers(Node* _rootNode, std::vector<NodePass2> *_initdata, std::vector<int> *_indiceList)
 {
 	int working = 1;
@@ -510,8 +468,6 @@ void RTGraphics::optimFillKDBuffers(Node* _rootNode, std::vector<int> *_indiceLi
 
 }
 
-
-
 void RTGraphics::createNodeBuffer(Node* _rootNode)
 {
 		std::vector<int> *indiceList = new std::vector<int>();
@@ -549,50 +505,6 @@ void RTGraphics::createNodeBuffer(Node* _rootNode)
 		//delete initData;
 		delete indiceList;
 }
-//
-//void RTGraphics::createNodeBuffer(Node* _rootNode)
-//{
-//	std::vector<NodePass2> *initdata = new std::vector<NodePass2>();
-//	std::vector<int> *indiceList = new std::vector<int>();
-//
-//
-//	NodePass2 node;
-//	node.aabb = _rootNode->aabb;
-//	node.index = -1;
-//	node.nrOfTriangles = 0;
-//
-//	initdata->push_back(node);
-//
-//	//depthFillKDBuffers(_rootNode, initdata, indiceList, 0);
-//	g_timer->Start();
-//	breadthFillKDBuffers(_rootNode, initdata, indiceList);
-//	g_timer->Stop();
-//
-//	m_gpuTextureGenTime = g_timer->GetTime();
-//
-//	//something silly with this memory release 
-//	m_NodeBuffer = computeWrap->CreateBuffer(STRUCTURED_BUFFER,
-//											 sizeof(NodePass2),
-//											 initdata->size(),
-//											 false,
-//											 true,
-//											 initdata->data(),
-//											 false,
-//											 "Structed Buffer: Node Buffer");
-//
-//	//something silly with this memory release 
-//	m_Indices = computeWrap->CreateBuffer(STRUCTURED_BUFFER,
-//											 sizeof(int),
-//											 indiceList->size(),
-//											 false,
-//											 true,
-//											 indiceList->data(),
-//											 false,
-//											 "Structed Buffer: Indice Buffer");
-//
-//	delete initdata;
-//	delete indiceList;
-//}
 
 void RTGraphics::createLightBuffer()
 {
@@ -623,30 +535,6 @@ RTGraphics::~RTGraphics()
 
 void RTGraphics::Update(float _dt)
 {
-	// updating the constant buffer holding the camera transforms
-	//XMFLOAT4X4 temp, viewInv, projInv;
-	//XMFLOAT3 tempp = Cam->getCameraPosition(); // w ska va 1
-	//XMStoreFloat4x4(&temp, XMMatrixIdentity());
-
-	//XMStoreFloat4x4(&temp, XMMatrixTranslation(tempp.x,tempp.y,tempp.z));
-
-	//XMStoreFloat4x4(&temp, XMMatrixTranspose(XMLoadFloat4x4(&temp)));
-
-	//XMStoreFloat4x4(&viewInv, XMMatrixInverse(&XMMatrixDeterminant(
-	//	XMLoadFloat4x4(&Cam->getViewMatrix())), XMLoadFloat4x4(&Cam->getViewMatrix())));
-
-	//XMStoreFloat4x4(&projInv, XMMatrixInverse(&XMMatrixDeterminant(
-	//	XMLoadFloat4x4(&Cam->getProjectionMatrix())), XMLoadFloat4x4(&Cam->getProjectionMatrix())));
-
-
-	//cb.IV = viewInv;
-	//cb.IP = projInv;
-	//cb.cameraPos = XMFLOAT4(tempp.x, tempp.y, tempp.z, 1);
-	//cb.nrOfTriangles = m_mesh.getNrOfFaces();
-	//g_DeviceContext->UpdateSubresource(g_cBuffer, 0, NULL, &cb, 0, 0);
-
-	//g_DeviceContext->UpdateSubresource(m_lightcBuffer, 0, NULL, &lightcb, 0, 0);
-
 
 	m_time += _dt;
 	static float frameCnt = 0;
@@ -793,35 +681,6 @@ void checkTriangleInAABB(TriangleMat const& triangle, NodeAABB const& aabb)
 	}
 }
 
-//void checkTree(Node const* node, std::vector<TriangleMat> const& triangles)
-//{
-//	static int nodeNum = 0;
-//	char buffer[1024];
-//	sprintf(buffer, "Node %d\n", nodeNum++);
-//	OutputDebugStringA(buffer);
-//	if (node->left != nullptr)
-//		checkTree(node->left, triangles);
-//	if (node->right != nullptr)
-//		checkTree(node->right, triangles);
-//	sprintf(buffer, "AABB: (%f, %f, %f)-(%f, %f, %f)\n",
-//		node->aabb.minPoint.x, node->aabb.minPoint.y, node->aabb.minPoint.z,
-//		node->aabb.maxPoint.x, node->aabb.maxPoint.y, node->aabb.maxPoint.z);
-//	OutputDebugStringA(buffer);
-//	if (node->index != nullptr)
-//	{
-//		for (int idx : *node.index)
-//		{
-//			TriangleMat const& triangle = triangles[idx];
-//			checkTriangleInAABB(triangle, node->aabb);
-//			sprintf(buffer, "Triangle %d (%f, %f, %f) (%f, %f, %f) (%f, %f, %f)\n", idx,
-//				triangle.pos0.x, triangle.pos0.y, triangle.pos0.z,
-//				triangle.pos1.x, triangle.pos1.y, triangle.pos1.z,
-//				triangle.pos2.x, triangle.pos2.y, triangle.pos2.z);
-//			OutputDebugStringA(buffer);
-//		}
-//	}
-//}
-
 void createNodeAABB(Node* _node, std::vector<AABB>* _AABBList)
 {
 	XMFLOAT4 max = _AABBList->at(0).maxPoint;
@@ -905,7 +764,6 @@ void assignTriangles(Node* _node, std::vector<AABB>* _AABBList)
 		_node->index.push_back(_AABBList->at(i).triangleIndex);
 	}
 }
-
 
 int RTGraphics::nodeAABBSplit(Node* _node)
 {

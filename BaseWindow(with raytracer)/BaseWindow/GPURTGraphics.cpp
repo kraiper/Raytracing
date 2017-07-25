@@ -279,23 +279,6 @@ void GPURTGraphics::fillMesh(std::vector<tinyobj::shape_t>* _shapes, std::vector
 			temp.push_back(tempPush);
 		}
 
-
-		//int k = 0;
-		//for (int j = 0; j < _shapes->at(i).mesh.texcoords.size(); j += 6)
-		//{
-		//	//Textcoordinats
-		//	temp.at(k).textureCoordinate0.x = _shapes->at(i).mesh.texcoords.at(j);
-		//	temp.at(k).textureCoordinate0.y = _shapes->at(i).mesh.texcoords.at(j + 1);
-
-		//	temp.at(k).textureCoordinate1.x = _shapes->at(i).mesh.texcoords.at(j + 2);
-		//	temp.at(k).textureCoordinate1.y = _shapes->at(i).mesh.texcoords.at(j + 3);
-
-		//	temp.at(k).textureCoordinate2.x = _shapes->at(i).mesh.texcoords.at(j + 4);
-		//	temp.at(k).textureCoordinate2.y = _shapes->at(i).mesh.texcoords.at(j + 5);
-		//	k++;
-		//}
-
-
 	}
 
 	for (int i = 0; i < temp.size(); i++)

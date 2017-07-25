@@ -64,10 +64,7 @@ private:
 	Mesh						m_mesh;
 	ComputeBuffer				*m_meshBuffer;
 	ID3D11ShaderResourceView	*m_meshTexture;
-	
-	//tiny mesh
-//	std::vector<tinyobj::shape_t> shapes;
-//	std::vector<tinyobj::material_t> materials;
+
 
 	//blululululu
 	ComputeBuffer				*m_NodeBuffer;
